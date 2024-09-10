@@ -5,7 +5,9 @@ pygame.init()
 screen = pygame.display.set_mode((800, 800))
 
 def distance(x1, y1, x2, y2):
-    pass
+    x_distance = x1-x2
+    y_distance = y1-y2
+    return (x_distance ** 2 + y_distance ** 2) ** 0.5
 
 def determine_target_prey_type(piece_type):
     if piece_type == 'r':
@@ -22,8 +24,48 @@ def find_nearest_prey(piece):
     prey_type = determine_target_prey_type(piece.type)
     prey_list = get_target_prey_type_list(prey_type)
 
-    pass
+    closest_prey = None
+    closest_prey_distance = None
+    for prey in prey_list:
+        prey_distance = distance(piece.x, piece.y, prey.x, prey.y)
+        if closest_prey:
+            if prey_distance < closest_prey_distance:
+                closest_prey = prey
+                closest_prey_distance = prey_distance
+        else:
+            closest_prey = prey
+            closest_prey_distance = prey_distance
+    
+    return closest_prey
 
+def test():
+
+    prey_list = []
+    for i in range(10):
+        prey_list.append(Piece(random.randint(0, 20), random.randint(0, 20), 'r'))
+        
+    print(prey_list)
+    
+    piece = Piece(20, 20, 's')
+
+    closest_prey = None
+    closest_prey_distance = None
+
+    for prey in prey_list:
+        prey_distance = distance(piece.x, piece.y, prey.x, prey.y)
+        if closest_prey:
+            print(f'closest_prey: {closest_prey}')
+            print(f'closest_prey_distance: {closest_prey_distance}')
+            print('-------')
+            if prey_distance < closest_prey_distance:
+                closest_prey = prey
+                closest_prey_distance = prey_distance
+        else:
+            closest_prey = prey
+            closest_prey_distance = prey_distance
+    
+    print(f'FINAL CLOSEST: {closest_prey}')
+    
 def find_prey_direction(piece):
     nearest_prey = find_nearest_prey(piece)
     
@@ -59,7 +101,7 @@ class Piece:
         self.y += direction_to_move[1]
 
     def __repr__(self):
-        return f'{self.type}'
+        return f'{self.x}'
 
     def __eq__(self, other):
         if isinstance(self, other):
@@ -89,4 +131,5 @@ def main():
 
         pygame.display.update()
 
-main()
+# main()
+test()
